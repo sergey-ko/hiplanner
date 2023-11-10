@@ -35,7 +35,7 @@ Sequential and hierarchical planners operate from the same starting point, requi
 
 The comparison highlights the Hi Planner's adaptability and resilience in planning, traits that are essential for managing intricate and evolving tasks.
 
-![hi planner vs sequential](/assets/sequential_vs_hi_planners.png)
+![hi planner vs sequential](/assets/sequential_vs_hi_planners.jpg)
 
 ## Example
 Consider the task: ```Summarize an input, translate it to French, and email it to John Doe.``` For this task, the following functions are available:
@@ -73,7 +73,7 @@ The planning creation process encompasses various facets:
 - Task decomposition into subtasks
 - Decision-making block to determine the subsequent steps (new skill creation, task splitting, or information/functionality request)
 
-![decision block](/assets/create_plan.png)
+![decision block](/assets/create_plan.jpg)
 
 ### Skill Creation
 Initially, we use simple code generation or prompts, but this can certainly be expanded upon. Looking at progress in different projects like GptEnginer and recent demo from GitHub Autopilots - generating working functions looks totally feasible
@@ -81,7 +81,7 @@ Initially, we use simple code generation or prompts, but this can certainly be e
 ### Task Split
 This step is akin to creating a sequential plan; however, it involves generating descriptions of functions necessary for plan formulation.
 
-![Task splitting process](/assets/task_split.png)
+![Task splitting process](/assets/task_split.jpg)
 
 
 [Click for full version](/docs/task_split_example_1.md)
