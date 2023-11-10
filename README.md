@@ -1,122 +1,120 @@
-> Code will be available soon or is on-demand now, cause it's under heavy cleanup and refactoring. 
+> Code availability is forthcoming, as it is presently undergoing extensive cleanup and refactoring. Stay tuned for updates or request access if needed urgently.
 
-TODO:
-- add task split loop example
-- ...
-- ...
+__To-Do:__
 
+[] Incorporate an example of a task split loop
 
-# Intro
-Hi planner is hierarchical or high-level planner.
-Goal of this work is to propose alternative to commonly used sequential planners (LangChain, SemanticKernel etc.). 
-We are looking only at plan generation phase, not plan execution phase.
+## Introduction
+"Hi Planner" refers to a hierarchical or high-level planning system. This research aims to introduce an alternative to the prevalent sequential planners such as LangChain and SemanticKernel, with a focus exclusively on the plan generation phase, omitting the execution phase.
+Nowel ideas compared to sequential planner 
 
+- task execution planning extarcted as separate activity
+- ability to ask for help
+- additional functionality generation 
+- task split into smaller sub-tasks
 
-![sequential vs hi planners](assets/sequential_vs_hi_planners.png)
-Both sequential and hi planners have same input : task description and skillset.
-__Sequential planner__ can either produce plan or error, while __hi planner__ can create simple functions or call for help requireing more info or functions if it can not create plan.
+## Comparison of sequential and hierarchical planners
+Both sequential and hierarchical planners begin with identical inputs: a task description and a skill set. The Sequential planner may yield a plan or an error. In contrast, the Hi Planner can generate basic functions or request additional information or functions if it cannot construct a plan.
 
-# Example
+![hi planner vs sequential](/assets/sequential_vs_hi_planners.png)
 
-Given the objective: "Summarize an input, translate it to French, and e-mail it to John Doe", the following plan was devised:
-And functions
-  - SummarizePlugin.Summarize
-  - WriterPlugin.Translate
-  - email.GetEmailAddress
-  - email.SendEmail
-Both __sequential__ and __hi__ planners produce same result
-
+## Example
+Consider the task: ```Summarize an input, translate it to French, and email it to John Doe.``` For this task, the following functions are available:
+```YAML
+- SummarizePlugin.Summarize
+- WriterPlugin.Translate
+- email.GetEmailAddress
+- email.SendEmail
 ```
+Both __sequential__ and __hi planners__ would output the same sequence of actions:
+
+```YAML
 Steps:
   - SummarizePlugin.Summarize input='$INPUT' => SUMMARY
   - WriterPlugin.Translate input='$SUMMARY' => TRANSLATED_SUMMARY
   - email.GetEmailAddress input='John Doe' => EMAIL_ADDRESS
   - email.SendEmail input='$TRANSLATED_SUMMARY' email_address='$EMAIL_ADDRESS'
 ```
-Given same objective and no functions __sequential planner__ produces error, since no plan can be created. While __hi planner__ produces quite extensive response
 
-```
-functions created:
+If given the same objective _without any_ available functions, the sequential planner would return an error due to the inability to create a plan. Meanwhile, the hi planner would provide a more detailed response:
+
+```YAML
+Functions created:
     - Summarize
     - Translate
-    - SendEmaiL
-information request:
-    - John Doe's email
+    - SendEmail
+Information request:
+    - Email address of John Doe
 ```
+## Algorithm
+The planning creation process encompasses various facets:
 
-# Algorithm
+- Sequential planning - conventional approach
+- Skill creation using Python, LLM, or other methods
+- Task decomposition into subtasks
+- Decision-making block to determine the subsequent steps (new skill creation, task splitting, or information/functionality request)
 
-Plan creation is split into several areas
-- Sequential planner - conventional planner
-- Skills creation (python, LLM, or others)
-- Task split into smaller tasks
-- Decision block that chooses what to try next (create new skill, split task, request for info/functionality)
+![decision block](/assets/create_plan.png)
 
-## Skill creation
-For now simple code or prompt generation is used - it can definetly be extended.
+### Skill Creation
+Initially, we use simple code generation or prompts, but this can certainly be expanded upon.
 
-## Task split
-Step is very similar to creating sequential step, except we are to generate functions descriptions required to generate plan.
+### Task Split
+This step is akin to creating a sequential plan; however, it involves generating descriptions of functions necessary for plan formulation.
 
-![task split](/assets/task_split.png)
+![Task splitting process](/assets/task_split.png)
 
-[Full version](/docs/task_split_example_1.md)
 
-```
-task: Summarize, translate and email text
-inputs:
-    - name: input_text
-        value: "This is a sample text that needs to be summarized, translated and emailed."
-functions: 
-    - name: summarize_text
-        description: This function takes a text as input and returns a summarized version of it. It uses a text summarization algorithm to achieve this.
-        verification: Check if the output text is a shorter version of the input text and retains the main points.
-        parameters:
-            - name: text
-            description: The text to be summarized
-        outputs:
-            - description: The summarized text
+[Click for full version](/docs/task_split_example_1.md)
+
+```yaml
+Copy code
+Task: Summarize, translate, and email text
+Inputs:
+    - Name: input_text
+      Value: "This is a sample text that needs to be summarized, translated, and emailed."
+Functions: 
+    - Name: summarize_text
+      Description: This function summarizes text using an algorithm.
+      Verification: Ensures the output is a concise yet comprehensive version of the input.
+      Parameters:
+          - Name: text
+            Description: The text to be summarized
+      Outputs:
+          - Description: The summarized text
     ...
 
-steps:
-    - name: Summarize the text
+Steps:
+    - Name: Summarize the text
     ...
-    - name: Translate the text
+    - Name: Translate the text
     ...
-    - name: Email the text
+    - Name: Email the text
 ```
 
-For further processing we ignore steps and try to implement functions.
+Subsequent processing will focus on implementing these functions, disregarding the steps described.
 
+### Decision Block
+Here, based on the task, available skills, and steps already taken, we decide:
 
-## Decision block
-Here main decision is made given task, skillset and step already taken at this level (i.e. we already might tried to implement function using python but did not succeed).
-Options are
-- try to create new skill using different skill creation approaches - python code generation, prompt for LLM, shell scrit etc.
-- try to split task into smaller tasks
-- call for help either with lack information or lack of skills in skillset (including the one we moight have generate)
+Whether to develop a new skill using various approaches like Python coding, LLM prompting, shell scripting, etc.
+Whether to break down the task into more manageable subtasks
+When to request assistance, either due to a lack of information or skills (including newly generated ones)
+Decision-making process
 
-![decision making](/assets/create_plan.png)
+Key considerations include:
 
-Tricks here 
-- switch from task solving to more general function generation
-- check if we are in the loop, i.e. planner splits tasks into smaller tasks, but smaller task are almost equal to original task (check [task split loop](/docs/task_split_loop.md) for details)
-- !__main__ trick is to use LLM as expert, not trying to hard code rules
+- Shifting from solving tasks to more general function generation
+- Detecting loops, where the task splits but the subtasks are too similar to the original (see task split loop)
+- Utilizing LLM as an expert system rather than rigidly adhering to hardcoded rules
 
+## Conclusion and Future Work
+This project was initiated as part of a larger endeavor to develop a Workforce Agent. An interactive and capable planner is vital for this venture.
 
-# Consluion and future work
-This work started as part of bigger initiative to create [__workforce agent__](https://skaska.pro/workforce-agent). More __interactive__ and __capable__ planner is crucial part of that initiative.
+### Integrating Domain Knowledge
+By designing the decision block as described, we can enhance it with various tool creation strategies and incorporate domain knowledge. This knowledge could relate to both task execution and planning for execution.
 
-### Add domain knowledge
-Having decision block implemented the way it's descrbed above makes it possible to extend this block with both more tool creation options and external knowledge use. These knowledge might include information for task execution and information for task execution planning.  
+### Isolating Prompts to a Separate Repository
+Since all logic currently relies on prompt engineering, it could be isolated to a dedicated repository. This separation would allow for distinct development cycles between the main codebase and AI prompting strategies.
 
-### Extract prompts to separate repo
-All logic is implemented using prompt engineering, thus they can extracted to separate repository. 
-One of the reason for extraction is to separate development lifecirles of main code and AI prompting.
-
-
-
-
-
-
-
+Additional research and development will refine these concepts to deliver a planner that is not only more interactive but also more capable of handling complex tasks.
