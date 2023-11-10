@@ -10,8 +10,13 @@ Nowel ideas compared to sequential planner
 
 - task execution planning extarcted as separate activity
 - ability to ask for help
-- additional functionality generation 
+- tools generation 
 - task split into smaller sub-tasks
+
+<p align="center">
+    <img src="/assets/sequential_vs_hi_planners.jpg" alt="hi planner vs sequential" width="50%">
+</p>
+
 
 ## Introduction
 The "Hi Planner" refers to a hierarchical or high-level planning system. It's a sophisticated hierarchical planning system designed to offer an innovative approach to task organization and strategy development. Unlike traditional sequential planners in _LangChain_ and _SemanticKernel_, which operate linearly on given set of provided functions, the _Hi Planner_ specializes in the generative aspect of planning—crafting the blueprint for task completion without delving into the actual execution. This research introduces several novel concepts that set the _Hi Planner_ apart from its sequential counterparts:
@@ -34,11 +39,6 @@ Sequential and hierarchical planners operate from the same starting point, requi
 -__Hi Planner's Adaptive Planning:__ In contrast, the Hi Planner embodies a more dynamic approach. Should it encounter a gap in its ability to construct a plan, it doesn't stop at an error. Instead, it explores alternative routes: it can autonomously create rudimentary functions to bridge the skills gap, or it can actively seek further information or additional functions. This not only prevents a standstill in the planning process but also enriches the planner's capability to handle complex, multifaceted tasks.
 
 The comparison highlights the Hi Planner's adaptability and resilience in planning, traits that are essential for managing intricate and evolving tasks.
-
-<p align="center">
-    <img src="/assets/sequential_vs_hi_planners.jpg" alt="hi planner vs sequential" width="50%">
-</p>
-
 
 ## Example
 Consider the task: ```Summarize an input, translate it to French, and email it to John Doe.``` For this task, the following functions are available:
