@@ -73,7 +73,7 @@ The planning creation process encompasses various facets:
 - Task decomposition into subtasks
 - Decision-making block to determine the subsequent steps (new skill creation, task splitting, or information/functionality request)
 
-![decision block](/assets/create_plan.jpg)
+<img src="/assets/create_plan.jpg" alt="decision block" width="50%">
 
 ### Skill Creation
 Initially, we use simple code generation or prompts, but this can certainly be expanded upon. Looking at progress in different projects like GptEnginer and recent demo from GitHub Autopilots - generating working functions looks totally feasible
